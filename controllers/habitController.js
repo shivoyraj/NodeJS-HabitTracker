@@ -23,19 +23,12 @@ exports.getHabits = (req, res) => {
         if (err) {
             return res.render("error", { error: err });
         }
-        return res.render("index", { habits });
+        return res.status(200).send({habits});
     });
 };
 
 exports.createHabit = (req, res) => {
-
-    const newHabit = new Habit(
-        {
-            title: req.body.habitName,
-            status: req.body.status
-        }
-    );
-
+    const newHabit = new Habit({title: req.body.habitName});
     newHabit.save((err, habit) => {
         if (err) {
             return res.render("error", { error: err });
