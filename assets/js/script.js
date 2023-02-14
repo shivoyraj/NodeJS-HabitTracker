@@ -17,9 +17,34 @@ function getDaysInMonth(date) {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 
+function createDropdownStatus() {
+    let select = document.createElement("select");
+    select.setAttribute("id", "task-status");
 
-function renderCalendar(date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
+    // Create options and add them to the select element
+    let option1 = document.createElement("option");
+    option1.setAttribute("value", "Not done");
+    option1.text = "Not done";
+    select.appendChild(option1);
 
+    let option2 = document.createElement("option");
+    option2.setAttribute("value", "Done");
+    option2.text = "Done";
+    select.appendChild(option2);
+
+    let option3 = document.createElement("option");
+    option3.setAttribute("value", "None");
+    option3.text = "None";
+    select.appendChild(option3);
+
+    return select;
+}
+
+
+var renderCalendar = async function (date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
+
+
+    //rendering started for month -year - day - date
     let dateEntry = ""
     dateEntry += "<tr><td></td>";
     monthEl.innerHTML = monthsName[date.getMonth()] + " " + date.getFullYear();
@@ -36,12 +61,41 @@ function renderCalendar(date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
         else
             dateEntry += `<td>_</td>`;
     }
-
     dateEntry += "</tr>";
-    datesEl.innerHTML = dateEntry;
+
+    // render started for habit and status
+    let HabitEntry = dateEntry
+    let allHabits = []
+    let response = await (await fetch('/allHabits')).json()
+    allHabits = response.habits;
+    for (let habit of allHabits) {
+        val = date.getDate();
+        HabitEntry += `<tr><td>${habit.title}</td>`;
+        j = 0;
+        for (; j < NoOfDaysToSkipForFirstWeekOfMonth; j++)
+            HabitEntry += `<td></td>`;
+        for (let i = j; i < 7; i++) {
+            if (val++ <= getDaysInMonth(date)) {
+                let selectEl = createDropdownStatus();
+                let color = habit.status === "Done" ? "#0072C6" : habit.status === "Not done" ? "red" : "gray";
+                HabitEntry += `<td><span style="font-size: 3vmin; color: ${color}; font-weight: bold;">${habit.status}</span>`;
+                HabitEntry += selectEl.outerHTML;
+                HabitEntry += `</td>`;
+            }
+            else {
+                HabitEntry += `<td>_</td>`;
+            }
+        }
+        HabitEntry += `</tr>`;
+        val++;
+
+    }
+    datesEl.innerHTML += HabitEntry;
 }
 
 prevBtn.addEventListener("click", function () {
+
+    datesEl.innerHTML = ""
 
     if (currentDay.getDate() == 1) {
         currentDay.setDate(currentDay.getDate() - 1);
@@ -58,6 +112,8 @@ prevBtn.addEventListener("click", function () {
 });
 
 nextBtn.addEventListener("click", function () {
+
+    datesEl.innerHTML = ""
 
     if (currentDay.getDate() == 1) {
         currentDay = getDateOfLastSunday(currentDay);
