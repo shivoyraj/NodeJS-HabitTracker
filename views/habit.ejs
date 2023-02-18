@@ -46,14 +46,16 @@
             </tr>
             <tr>
               <th></th>
+              <% let emptyDateCount = 0 %>
+              <% let skipsInFirstWeek = currentWeekDates[0] === '_' %>
               <% currentWeekDates.forEach(date => { %>
                 <% if (date == '_') { %>
                   <th><%= date %></th>
+                  <% emptyDateCount++ %>
                 <% } else { %>
                   <th> <%= new Date(date).getDate() %> </th>
                 <% } %>
               <% }) %>
-              
             </tr>
           </thead>
           <tbody id="dates">
@@ -62,6 +64,11 @@
                 <td>
                   <%= habit.title %>
                 </td>
+                <% if (skipsInFirstWeek) { %>
+                  <% for (let i = 0; i < emptyDateCount; i++) { %>
+                    <td></td>
+                  <% } %>
+                <% } %>
                 <% habit.record.forEach(function(entry) { %>
                   <% if (currentWeekDates.includes(entry.date.toDateString())) { %>
                     <td>
@@ -71,6 +78,11 @@
                     </td>
                   <% } %>
                 <% }) %>
+                <% if (!skipsInFirstWeek) { %>
+                  <% for (let i = 0; i < emptyDateCount; i++) { %>
+                    <td></td>
+                  <% } %>
+                <% } %>
               </tr>
             <% }) %>
           </tbody>
