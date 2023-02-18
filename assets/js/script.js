@@ -8,12 +8,11 @@ async function changeStatus(habitId, statusId) {
     try {
         const updatedHabit = await (await fetch(`/updateStatus/${habitId}/${statusId}`)).json();
         if (updatedHabit.status === 'Done')
-            document.getElementById(`${habitId},${statusId}`).innerHTML = '&#x2705';
+            document.getElementById(`${habitId},${statusId}`).innerHTML =  '✅';
         else if (updatedHabit.status === 'Not done')
-            document.getElementById(`${habitId},${statusId}`).innerHTML = '&#x274C';
+            document.getElementById(`${habitId},${statusId}`).innerHTML = '❌';
         else
-            document.getElementById(`${habitId},${statusId}`).innerHTML = '&#9606';
-        console.log(document.getElementById(`${habitId},${statusId}`).innerHTML);
+            document.getElementById(`${habitId},${statusId}`).innerHTML = '⬜';
     } catch (error) {
         console.error(error);
         alert("An error occurred while updating the status.");

@@ -59,21 +59,16 @@
                 </td>
                 <% habit.record.forEach(function(entry) { %>
                   <% if (currentWeekDates.includes(entry.date.toDateString())) { %>
-                    <td id = '<%= habit._id %>,<%= entry._id %>' onclick="changeStatus('<%= habit._id %>', '<%= entry._id %>')">
-                      <% if (entry.status === 'Done') { %>
-                        <span class = 'icon'>&#x2705;</span>
-                      <% } else if (entry.status === 'Not done') { %>
-                        <span class = 'icon' >&#x274C;</span>
-                      <% } else { %>
-                        <span class = 'icon' >&#9608;</span>
-                      <% } %>
+                    <td>
+                      <span id = '<%= habit._id %>,<%= entry._id %>' onclick="changeStatus('<%= habit._id %>', '<%= entry._id %>')" >
+                        <%= entry.status === 'Done' ? '✅' : entry.status === 'Not done' ? '❌' : '⬜' %>
+                      </span>                                     
                     </td>
                   <% } %>
                 <% }) %>
               </tr>
             <% }) %>
           </tbody>
-          
       </div>
     </div>
     <script src="/js/script.js"></script>
