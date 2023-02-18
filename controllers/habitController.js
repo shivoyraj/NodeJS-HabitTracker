@@ -1,59 +1,108 @@
-const Habit = require("../models/habit");
+const { renderWeekCalender, renderPreviousWeek, renderNextWeek } = require('../utils/calender');
+const Habit = require('../models/habit')
+var allHabitsObj = []
 
-exports.homePage = (req, res) => {
-    Habit.find({}, (err, habits) => {
-        if (err) {
-            return res.render("error", { error: err });
-        }
-        return res.render("index", { habits });
-    });
+exports.homePage = async function (req, res) {
+
+    try {
+        allHabitsObj = await Habit.find({});
+        return res.render("index", { allHabitsObj });
+    }
+    catch (err) {
+        console.log(err);
+    }
 }
 
-exports.AddHabitPage = (req, res) => {
-    Habit.find({}, (err, habits) => {
-        if (err) {
-            return res.render("error", { error: err });
+exports.updateHabitStatus = async function (req, res) {
+
+    try {
+        const habit = await Habit.findById(req.params.habitId);
+        const record = habit.record.id(req.params.statusId);
+        if (!record) {
+            return res.status(404).json({ error: "Record not found" });
         }
-        return res.render("habit", { habits });
-    });
+        record.status = record.status === "Not done" ? "None" : record.status === "None" ? "Done" : "Not done";
+        await habit.save();
+        res.json({ 'status': record.status });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ 'error': 'something went wrong at server side '});
+    }
+
 }
 
-exports.getHabits = (req, res) => {
-    Habit.find({}, (err, habits) => {
-        if (err) {
-            return res.render("error", { error: err });
+exports.renderCurrentWeek = async function (req, res) {
+    let [currentWeekDates, currentMonth, currentYear] = renderWeekCalender();
+    for (const habitObj of allHabitsObj) {
+        for (const nthDay of currentWeekDates) {
+            if (nthDay != "_") {
+                let existingRecord = habitObj.record.find(
+                    (record) => record.date.toDateString() === new Date(nthDay).toDateString()
+                );
+                if (!existingRecord) {
+                    habitObj.record.push({ date: nthDay });
+                }
+            }
         }
-        return res.status(200).send({habits});
-    });
-};
+        await habitObj.save();
+    }
+    return res.render("habit", { allHabitsObj, currentWeekDates, currentMonth, currentYear });
+}
+
+exports.renderPreviousWeek = async function (req, res) {
+    let [currentWeekDates, currentMonth, currentYear] = renderPreviousWeek();
+    for (const habitObj of allHabitsObj) {
+        for (const nthDay of currentWeekDates) {
+            if (nthDay != "_") {
+                let existingRecord = habitObj.record.find(
+                    (record) => record.date.toDateString() === new Date(nthDay).toDateString()
+                );
+                if (!existingRecord) {
+                    habitObj.record.push({ date: nthDay });
+                }
+            }
+        }
+        await habitObj.save();
+    }
+    return res.render("habit", { allHabitsObj, currentWeekDates, currentMonth, currentYear });
+}
+
+exports.renderNextWeek = async function (req, res) {
+    let [currentWeekDates, currentMonth, currentYear] = renderNextWeek();
+    for (const habitObj of allHabitsObj) {
+        for (const nthDay of currentWeekDates) {
+            if (nthDay != "_") {
+                let existingRecord = habitObj.record.find(
+                    (record) => record.date.toDateString() === new Date(nthDay).toDateString()
+                );
+                if (!existingRecord) {
+                    habitObj.record.push({ date: nthDay });
+                }
+            }
+        }
+        await habitObj.save();
+    }
+    return res.render("habit", { allHabitsObj, currentWeekDates, currentMonth, currentYear });
+}
 
 exports.createHabit = (req, res) => {
-    const newHabit = new Habit({title: req.body.habitName});
+    const newHabit = new Habit({ title: req.body.habitName });
     newHabit.save((err, habit) => {
         if (err) {
-            return res.render("error", { error: err });
+            console.log('error while adding new habit : ' + err);
+        }
+        else {
+            console.log('habit added in db successfully : ' + habit);
+            //allHabitsObj.push(habit);
         }
         return res.redirect("/");
     });
 };
 
-exports.updateHabit = (req, res) => {
-    const { id, status } = req.body;
-    Habit.findByIdAndUpdate(id, { status }, { new: true }, (err, habit) => {
-        if (err) {
-            return res.render("error", { error: err });
-        }
-        return res.redirect("/habits");
-    });
-};
-
 exports.deleteHabit = (req, res) => {
-    const { id } = req.body;
-    Habit.findByIdAndDelete(id, (err) => {
-        if (err) {
-            return res.render("error", { error: err });
-        }
-        return res.redirect("/habits");
+    const id = req.params.habitId;
+    Habit.findByIdAndDelete(id, () => {
+        return res.redirect("/");
     });
 };
 

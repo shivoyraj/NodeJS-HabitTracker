@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/script.js"></script>
   <title>Habit Tracker</title>
 </head>
 
@@ -25,12 +26,12 @@
     </div>
   </nav>
   <div class="container mt-5">
-    <h3>All Habits</h3>
+    <h3 id="allHabit">All Habits</h3>
     <div class="calendar">
       <div class="header">
-        <button id="prev">&lt;</button>
-        <span id="month"></span>
-        <button id="next">&gt;</button>
+        <button id="prev" onclick="location.href='/habits/previousWeekRecords'">&lt;</button>
+        <span id="month"><%= currentMonth %> : <%= currentYear %></span>
+        <button id="next" onclick="location.href='/habits/nextWeekRecords'">&gt;</button>        
         <table class="table">
           <thead>
             <tr>
@@ -43,10 +44,36 @@
               <th>Fri</th>
               <th>Sat</th>
             </tr>
+            <tr>
+              <th></th>
+              <% currentWeekDates.forEach(date => { %>
+                <th><%= date %></th>
+              <% }) %>
+            </tr>
           </thead>
           <tbody id="dates">
+            <% allHabitsObj.forEach(function(habit) { %>
+              <tr>
+                <td>
+                  <%= habit.title %>
+                </td>
+                <% habit.record.forEach(function(entry) { %>
+                  <% if (currentWeekDates.includes(entry.date.toDateString())) { %>
+                    <td id = '<%= habit._id %>,<%= entry._id %>' onclick="changeStatus('<%= habit._id %>', '<%= entry._id %>')">
+                      <% if (entry.status === 'Done') { %>
+                        <span class = 'icon'>&#x2705;</span>
+                      <% } else if (entry.status === 'Not done') { %>
+                        <span class = 'icon' >&#x274C;</span>
+                      <% } else { %>
+                        <span class = 'icon' >&#9608;</span>
+                      <% } %>
+                    </td>
+                  <% } %>
+                <% }) %>
+              </tr>
+            <% }) %>
           </tbody>
-        </table>
+          
       </div>
     </div>
     <script src="/js/script.js"></script>

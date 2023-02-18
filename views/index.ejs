@@ -27,7 +27,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="/habit/new" >All Habits <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/habits/currentWeekRecords" > Track Habits <span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>
@@ -60,12 +60,11 @@
           </tr>
         </thead>
         <tbody>
-          <% habits.forEach(function(habit){ %>
+          <% allHabitsObj.forEach(function(habit){ %>
             <tr>
               <td><%= habit.title %></td>
               <td>
-                <a href="/habits/<%= habit._id %>" class="btn btn-primary">View</a>
-                <a href="#" class="btn btn-danger" onclick="deleteHabit('<%= habit._id %>')">Delete</a>
+                <a href="/habits/delete/<%= habit._id %>" class="btn btn-danger">Delete</a>
               </td>
             </tr>
           <% }); %>
