@@ -47,8 +47,13 @@
             <tr>
               <th></th>
               <% currentWeekDates.forEach(date => { %>
-                <th><%= date %></th>
+                <% if (date == '_') { %>
+                  <th><%= date %></th>
+                <% } else { %>
+                  <th> <%= new Date(date).getDate() %> </th>
+                <% } %>
               <% }) %>
+              
             </tr>
           </thead>
           <tbody id="dates">
