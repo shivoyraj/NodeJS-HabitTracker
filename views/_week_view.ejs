@@ -1,0 +1,61 @@
+<div class="calendar">
+<div class="header">
+    <button id="prev" onclick="location.href='/habits/previousWeekRecords'">&lt;</button>
+    <span id="month"><%= currentMonth %> : <%= currentYear %></span>
+    <button id="next" onclick="location.href='/habits/nextWeekRecords'">&gt;</button>        
+    <table class="table">
+    <thead>
+        <tr>
+        <th>Name of Habit</th>
+        <th>Sun</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+        </tr>
+        <tr>
+        <th></th>
+        <% let emptyDateCount = 0 %>
+        <% let skipsInFirstWeek = currentWeekDates[0] === '_' %>
+        <% currentWeekDates.forEach(date => { %>
+            <% if (date == '_') { %>
+            <th><%= date %></th>
+            <% emptyDateCount++ %>
+            <% } else { %>
+            <th> <%= new Date(date).getDate() %> </th>
+            <% } %>
+        <% }) %>
+        </tr>
+    </thead>
+    <tbody id="dates">
+        <% allHabitsObj.forEach(function(habit) { %>
+        <tr>
+            <td>
+            <%= habit.title %>
+            </td>
+            <% if (skipsInFirstWeek) { %>
+            <% for (let i = 0; i < emptyDateCount; i++) { %>
+                <td></td>
+            <% } %>
+            <% } %>
+            <% habit.record.forEach(function(entry) { %>
+            <% if (currentWeekDates.includes(entry.date.toDateString())) { %>
+                <td>
+                <span id = '<%= habit._id %>,<%= entry._id %>' onclick="changeStatus('<%= habit._id %>', '<%= entry._id %>')" >
+                    <%= entry.status === 'Done' ? '✅' : entry.status === 'Not done' ? '❌' : '⬜' %>
+                </span>                                     
+                </td>
+            <% } %>
+            <% }) %>
+            <% if (!skipsInFirstWeek) { %>
+            <% for (let i = 0; i < emptyDateCount; i++) { %>
+                <td></td>
+            <% } %>
+            <% } %>
+        </tr>
+        <% }) %>
+    </tbody>
+</div>
+</div>
