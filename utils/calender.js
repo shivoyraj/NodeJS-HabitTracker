@@ -1,76 +1,115 @@
+// declare a variable to hold the current day
 var currentDay;
+
+// declare an array of month names to use later
 const monthsName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+// function to get the date of the last Sunday for a given date
 function getDateOfLastSunday(today) {
     let dayNo = today.getDay();
     let diff = today.getDate() - dayNo;
     return new Date(today.setDate(diff));
 }
 
+// function to get the number of days in a given month
 function getDaysInMonth(date) {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 
+// function to get an array of entries for a current week(starts from sunday), current month and current year
+// if month is not starting with sunday then NoOfDaysToSkipForFirstWeekOfMonth times skipped for first week
 var getRowEntires = function (date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
 
     let currentMonth = monthsName[date.getMonth()]
     let currentYear = date.getFullYear();
     let val = date.getDate();
-    currentWeekDates = []
+    let currentWeekDates = []
 
+    // populating 7 days date object records in currentWeekDates list
     for (let i = 0; i < 7; i++) {
+        // to skip days of first week which are not part of current month.
         if (i < NoOfDaysToSkipForFirstWeekOfMonth) {
             currentWeekDates.push('_');
-        } else if (val <= getDaysInMonth(date)) {
+        }
+        // including all date which are part of current week and also part of current month.
+        else if (val <= getDaysInMonth(date)) {
             let nthDay = new Date(date.getFullYear(), date.getMonth(), val, 0, 0, 0, 0);
             nthDay.setMinutes(nthDay.getMinutes() - date.getTimezoneOffset());
             val++;
-            currentWeekDates.push(nthDay)
-        } else {
+            currentWeekDates.push(nthDay);
+        }
+        // to skip days of last week which are not part of current month.
+        else {
             currentWeekDates.push('_');
         }
     }
     return [currentWeekDates, currentMonth, currentYear];
 }
 
+//will get current week dates
 var renderWeekCalender = function () {
-    currentWeekDates = []
+    // Get and Set the current date
     currentDay = new Date();
+
+    //if current date and last sunday are not of same month.[need to display first week of this month start from date 1st]
     if (currentDay.getMonth() != getDateOfLastSunday(currentDay).getMonth()) {
-        let firstDateOfCurrentMonth = new Date(currentDay.getFullYear(), currentDay.getMonth(), 1);
+        //get the first date of the current month
+        let firstDateOfCurrentMonth = new Date(currentDay.getFullYear(), currentDay.getMonth()+1, 1);
+        //pass it to getRowEntires along with the day of the week it falls on
         return getRowEntires(firstDateOfCurrentMonth, firstDateOfCurrentMonth.getDay());
     }
-    else
+    //if current date and last sunday are of same month.
+    else {
+        // Get the last Sunday of the current month and pass it to getRowEntires
         return getRowEntires(getDateOfLastSunday(currentDay));
+    }
 }
 
+//will get previous week dates
 var renderPreviousWeek = function () {
 
+    // Check if the current date is the first day of the month
     if (currentDay.getDate() == 1) {
+        //[need to display last week dates for previous month only]
+        //set the current date to the last day of the previous month
         currentDay.setDate(currentDay.getDate() - 1);
+        //then get the last Sunday of that month and pass it to getrowEntries
         return getRowEntires(getDateOfLastSunday(currentDay));
     }
+    // if 7 days back from current date is still in same month (on or after 1st date)
     else if ((currentDay.getDate() - 7) >= 1) {
+        //[need to display normally current week]
+        // simply reduce current date by 7 and pass on
         currentDay.setDate(currentDay.getDate() - 7);
     }
+    // if 7 days back from current date is in previous month (before 1st date)
     else if ((currentDay.getDate() - 7) < 1) {
+        //[need to display dates of first week of this month start from date 1st]
+        // Set the current date to the first day of the current month and pass on
         currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), 1);
     }
+    // Pass the modified current date and the day of the week it falls on to getRowEntires
     return getRowEntires(currentDay, currentDay.getDay());
 }
 
+//will get next week dates
 var renderNextWeek = function () {
 
+    // Check if the current date is the first day of the month
     if (currentDay.getDate() == 1) {
+        //set the current date to the last Sunday of the current month
         currentDay = getDateOfLastSunday(currentDay);
-        console.log(currentDay)
     }
+    // if 7day after current date is in same month
     else if (getDaysInMonth(currentDay) - currentDay.getDate() < 7) {
+        //set the current date to the first day of the next month
         currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, 1);
+        //pass it to getRowEntires along with the day of the week it falls on
         return getRowEntires(currentDay, currentDay.getDay());
     }
+    // Add 7 days to the current date and pass it to getRowEntires along with the day of the week it falls on
     currentDay.setDate(currentDay.getDate() + 7);
     return getRowEntires(currentDay, currentDay.getDay());
 }
 
-module.exports = {renderWeekCalender, renderPreviousWeek, renderNextWeek };
+module.exports = { renderWeekCalender, renderPreviousWeek, renderNextWeek };

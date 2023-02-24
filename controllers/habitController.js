@@ -1,19 +1,11 @@
 const Habit = require('../models/habit');
 const Status = require('../models/status');
-var allHabitsObj = [];
 
-async function loadAllHabit() {
+// loading all habits and Rending Homepage 
+exports.homePage = async function (req, res) {
+    let allHabitsObj = [];
     try {
         allHabitsObj = await Habit.find({}).populate('record');
-        console.log(allHabitsObj);
-    } catch (err) {
-        console.log('Error while loading all habits : ' + err);
-    }
-}
-
-exports.homePage = async function (req, res) {
-    try {
-        await loadAllHabit();
         return res.render("index", { allHabitsObj });
     } catch (err) {
         console.error(err);
@@ -21,6 +13,7 @@ exports.homePage = async function (req, res) {
     }
 }
 
+//Update the status of existing habit based on input url parameters habitId and statusId
 exports.updateHabitStatus = async function (req, res) {
     try {
         const { habitId, statusId } = req.params;
@@ -37,7 +30,7 @@ exports.updateHabitStatus = async function (req, res) {
     }
 }
 
-
+// For adding new records in Habit db
 exports.createHabit = async function (req, res) {
     try {
         const newHabit = new Habit({ title: req.body.habitName });
@@ -50,6 +43,7 @@ exports.createHabit = async function (req, res) {
     }
 };
 
+// for deleting existing habit from db
 exports.deleteHabit = async function (req, res) {
     try {
         const id = req.params.habitId;

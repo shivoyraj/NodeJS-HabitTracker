@@ -4,17 +4,17 @@ const Status = require('../models/status');
 const currentDate = new Date();
 let allHabitsObj = []
 
+//for loading all habits from db
 async function loadAllHabits() {
     try {
         allHabitsObj = await Habit.find({}).populate('record');
-        console.log(allHabitsObj[0].record[0]);
     } catch (err) {
         console.log('Error while loading all habits : ' + err);
     }
 }
 
+//for rendering given week dates to status page
 async function renderCalender(req, res, currentWeekDates, currentMonth, currentYear) {
-    //console.log(currentWeekDates);
     for (const habitObj of allHabitsObj) {
         for (const nthDay of currentWeekDates) {
             if (nthDay != "_") {
@@ -28,24 +28,27 @@ async function renderCalender(req, res, currentWeekDates, currentMonth, currentY
         }
         await habitObj.save();
     }
-    return res.render("habit", { allHabitsObj, currentWeekDates, currentMonth, currentYear, currentDate });
+    return res.render("status", { allHabitsObj, currentWeekDates, currentMonth, currentYear, currentDate });
 }
 
-
+// getting and rendering all dates of current weeks
 exports.renderCurrentWeek = async function (req, res) {
     await loadAllHabits();
     let [currentWeekDates, currentMonth, currentYear] = renderWeekCalender();
     return renderCalender(req, res, currentWeekDates, currentMonth, currentYear);
 };
 
+// getting and rendering all dates of previous weeks
 exports.renderPreviousWeek = async function (req, res) {
     let [currentWeekDates, currentMonth, currentYear] = renderPreviousWeek();
     await loadAllHabits();
     return renderCalender(req, res, currentWeekDates, currentMonth, currentYear);
 };
 
+// getting and rendering all dates of next weeks
 exports.renderNextWeek = async function (req, res) {
     let [currentWeekDates, currentMonth, currentYear] = renderNextWeek();
     await loadAllHabits();
+    console.log(currentWeekDates);
     return renderCalender(req, res, currentWeekDates, currentMonth, currentYear);
 };
