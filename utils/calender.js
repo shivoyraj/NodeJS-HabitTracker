@@ -25,7 +25,7 @@ var getRowEntires = function (date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
             let nthDay = new Date(date.getFullYear(), date.getMonth(), val, 0, 0, 0, 0);
             nthDay.setMinutes(nthDay.getMinutes() - date.getTimezoneOffset());
             val++;
-            currentWeekDates.push(nthDay.toDateString())
+            currentWeekDates.push(nthDay)
         } else {
             currentWeekDates.push('_');
         }

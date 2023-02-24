@@ -13,6 +13,7 @@ td {
 
 #currentView{
   position: absolute;
+  top: 25%;
   left: 70%;
 }
 

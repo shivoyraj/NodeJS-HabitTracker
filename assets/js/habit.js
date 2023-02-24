@@ -26,9 +26,11 @@ async function changeStatus(habitId, statusId) {
         else
             updateStatusIcon = '⬜';
         document.getElementById(`${habitId},${statusId}`).innerHTML = updateStatusIcon;
-        document.getElementById(`today : ${habitId},${statusId}`).innerHTML = updateStatusIcon;
+        const element = document.getElementById(`today:${habitId},${statusId}`);
+        if (element) {
+          element.innerHTML = updateStatusIcon;
+        }        
     } catch (error) {
-        console.error(error);
-        alert("An error occurred while updating the status."+err);
+        console.error("An error occurred while updating the status." + error);
     }
 }

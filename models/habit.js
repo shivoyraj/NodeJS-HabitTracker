@@ -8,12 +8,8 @@ const habitSchema = new mongoose.Schema({
   },
   record: [
     {
-      date: { type: Date},
-      status: {
-        type: String,
-        enum: ["Done", "Not done", "None"],
-        default: "None"
-      }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Status"
     }
   ]
 });
