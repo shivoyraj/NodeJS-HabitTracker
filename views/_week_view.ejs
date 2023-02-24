@@ -2,7 +2,8 @@
 <div class="header">
     <button id="prev" onclick="location.href='/habits/previousWeekRecords'">&lt;</button>
     <span id="month"><%= currentMonth %> : <%= currentYear %></span>
-    <button id="next" onclick="location.href='/habits/nextWeekRecords'">&gt;</button>        
+    <button id="next" onclick="location.href='/habits/nextWeekRecords'">&gt;</button>    
+    <br><br>    
     <table class="table">
     <thead>
         <tr>
@@ -38,7 +39,7 @@
             <% if (skipsInFirstWeek) { %>
             <% for (let i = 0; i < emptyDateCount; i++) { %>
                 <td></td>
-            <% } %>
+                <% } %>
             <% } %>
             <% habit.record.forEach(function(entry) { %>
             <% if (currentWeekDates.includes(entry.date.toDateString())) { %>
@@ -47,12 +48,12 @@
                     <%= entry.status === 'Done' ? '✅' : entry.status === 'Not done' ? '❌' : '⬜' %>
                 </span>                                     
                 </td>
-            <% } %>
+                <% } %>
             <% }) %>
             <% if (!skipsInFirstWeek) { %>
-            <% for (let i = 0; i < emptyDateCount; i++) { %>
-                <td></td>
-            <% } %>
+                <% for (let i = 0; i < emptyDateCount; i++) { %>
+                    <td></td>
+                <% } %>
             <% } %>
         </tr>
         <% }) %>

@@ -1,6 +1,8 @@
 const Date = require('../models/date');
 const Habit = require('../models/habit')
 
+const currentDay = new Date();
+
 exports.getStatusByDateIdHabitId = async function(req,res){
 
     const dateId = req.params.dateId;

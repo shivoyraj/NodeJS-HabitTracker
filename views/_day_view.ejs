@@ -1,1 +1,17 @@
-<p>this is day view</p>
+<% const today = currentDate; %>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"><%= new Date(currentDate).toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'}) %></h5>
+  </div>
+  <% allHabitsObj.forEach(function(habit) { %>
+    <div class="card-body">
+      <h3 class="card-subtitle mb-2"><%= habit.title %></h3>
+      <p class="card-text"><strong>Today's Record Status:</strong> 
+      <% const entry = habit.record.find(record => record.date.toLocaleDateString() == today.toLocaleDateString()); %>
+      <span id = 'today : <%= habit._id %>,<%= entry._id %>' onclick="changeStatus('<%= habit._id %>', '<%= entry._id %>')" >
+          <%= entry.status === 'Done' ? '✅' : entry.status === 'Not done' ? '❌' : '⬜' %>
+      </span>
+      </p>
+    </div>
+  <% }) %>
+</div>
