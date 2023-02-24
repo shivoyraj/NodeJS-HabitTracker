@@ -11,12 +11,12 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Habit Tracker</a>
-    <a class="nav-link text-dark" href="/habits/currentWeekRecords">Track Habits</a>
+    <a class="nav-link text-dark" href="/status/currentWeekRecords">Track Habits</a>
   </nav>
 
   <div class="container mt-5">
     <h3>Add a Habit</h3>
-    <form action="/habits" method="post">
+    <form action="/habits/createHabit/" method="post">
       <div class="form-group">
         <label for="habitName">Habit Name</label>
         <input type="text" class="form-control" id="habitName" name="habitName" required>

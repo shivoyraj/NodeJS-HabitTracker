@@ -17,7 +17,7 @@ toggleSwitch.addEventListener('change', (event) => {
 
 async function changeStatus(habitId, statusId) {
     try {
-        const updatedHabit = await (await fetch(`/updateStatus/${habitId}/${statusId}`)).json();
+        const updatedHabit = await (await fetch(`/habits/updateStatus/${habitId}/${statusId}`)).json();
         let updateStatusIcon;
         if (updatedHabit.status === 'Done')
             updateStatusIcon = '✅';
@@ -32,8 +32,3 @@ async function changeStatus(habitId, statusId) {
         alert("An error occurred while updating the status."+err);
     }
 }
-
-// window.onload = function(){
-//     fetch('/')
-//     fetch('/habits/currentWeekRecords')
-// }
