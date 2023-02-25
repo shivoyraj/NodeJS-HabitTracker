@@ -80,3 +80,27 @@ button {
   margin: 4px 2px;
   cursor: pointer;
 }
+
+@media (width<=1200px) {
+  #currentView{
+    position: absolute;
+    top: 25%;
+    left: 65%;
+  }
+}
+
+@media (width<=770px) {
+  #currentView{
+    position: absolute;
+    top: 25%;
+    left: 60%;
+  }
+}
+
+@media (width<=530px) {
+  #currentView{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+  }
+}
