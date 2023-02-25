@@ -52,6 +52,14 @@ var getRowEntires = function (date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
 var renderWeekCalender = function () {
     // Get and Set the current date
     currentDay = new Date();
+
+    if (process.env.NODE_ENV == 'prod') {
+        const localOffset = currentDay.getTimezoneOffset(); // get offset in minutes
+        const indiaOffset = -330; // offset in minutes for India time zone
+        const indiaTime = new Date(currentDay.getTime() + (localOffset + indiaOffset) * 60 * 1000);
+        currentDay.setTime(indiaTime.getTime());
+    }
+
     //if current date and last sunday are not of same month.[need to display first week of this month start from date 1st]
     if (currentDay.getMonth() != getDateOfLastSunday(currentDay).getMonth()) {
         //get the first date of the current month

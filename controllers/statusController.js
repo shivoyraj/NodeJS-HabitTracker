@@ -1,7 +1,18 @@
 const { renderWeekCalender, renderPreviousWeek, renderNextWeek } = require('../utils/calender');
 const Habit = require('../models/habit');
 const Status = require('../models/status');
+
 const currentDate = new Date();
+
+if (process.env.NODE_ENV == 'prod') {
+    const localOffset = currentDate.getTimezoneOffset(); // get offset in minutes
+    const indiaOffset = -330; // offset in minutes for India time zone
+    const indiaTime = new Date(currentDate.getTime() + (localOffset + indiaOffset) * 60 * 1000);
+    currentDate.setTime(indiaTime.getTime());
+}
+
+console.log('environment ' + process.env.NODE_ENV);
+
 let allHabitsObj = []
 
 //for loading all habits from db
