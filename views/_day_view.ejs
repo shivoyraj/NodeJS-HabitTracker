@@ -1,4 +1,4 @@
-<% const today = currentDate; %>
+<% const today = new Date(currentDate); %>
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">
@@ -10,9 +10,9 @@
       <h3 class="card-subtitle mb-2"><%= habit.title %></h3>
       <p class="card-text"><strong>Today's Record Status:</strong> 
         <% const entry = habit.record.find(record => record.date.toLocaleDateString() == today.toLocaleDateString()); %>
-        <span id='today:<%= habit._id %>,<%= entry._id %>' onclick="changeStatus('<%= habit._id %>', '<%= entry._id %>')">
-          <%= entry.status === 'Done' ? '✅' : entry.status === 'Not done' ? '❌' : '⬜' %>
-        </span>
+        <span id='today:<%= habit._id %>,<%= entry?._id %>' onclick="changeStatus('<%= habit._id %>', '<%= entry?._id %>')">
+          <%= entry?.status === 'Done' ? '✅' : entry?.status === 'Not done' ? '❌' : '⬜' %>
+        </span>        
       </p>
     </div>
   <% }) %>  

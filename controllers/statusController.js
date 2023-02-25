@@ -2,15 +2,7 @@ const { renderWeekCalender, renderPreviousWeek, renderNextWeek } = require('../u
 const Habit = require('../models/habit');
 const Status = require('../models/status');
 
-const currentDate = new Date();
-const currentOffset = currentDate.getTimezoneOffset();
-
-if (currentOffset !== -330) {
-  // If the current offset is not 330, adjust the time by adding the offset difference
-  const adjustedTime = currentDate.getTime() + (currentOffset * 60 * 1000) - (330 * 60 * 1000);
-  currentDate.setTime(adjustedTime);
-}
-
+var currentDate = new Date();
 let allHabitsObj = []
 
 //for loading all habits from db
@@ -42,8 +34,21 @@ async function renderCalender(req, res, currentWeekDates, currentMonth, currentY
 
 // getting and rendering all dates of current weeks
 exports.renderCurrentWeek = async function (req, res) {
+    
+    const [month, date , year ] = req.query.today.split(',')[0].split('/');
+    
+    // creating current date
+    currentDate = new Date(year,month-1,date); // month index starts from 0 
+    
+    // avoiding timezone conflicts
+    currentDate.setMinutes(currentDate.getMinutes() - currentDate.getTimezoneOffset());
+    
     await loadAllHabits();
-    let [currentWeekDates, currentMonth, currentYear] = renderWeekCalender();
+    let [currentWeekDates, currentMonth, currentYear] = renderWeekCalender(currentDate);
+
+    // console.log(currentDate);
+    // console.log(currentWeekDates);
+    currentDate = currentDate.toISOString().slice(0, -1);
     return renderCalender(req, res, currentWeekDates, currentMonth, currentYear);
 };
 

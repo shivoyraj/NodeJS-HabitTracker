@@ -39,7 +39,7 @@ exports.createHabit = async function (req, res) {
         return res.redirect("/");
     } catch (err) {
         console.log('error while adding new habit : ' + err);
-        res.status(500).json({ 'error': 'something went wrong at server side ' });
+        return res.redirect("/");
     }
 };
 

@@ -37,6 +37,7 @@ var getRowEntires = function (date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
         else if (val <= getDaysInMonth(date)) {
             let nthDay = new Date(date.getFullYear(), date.getMonth(), val, 0, 0, 0, 0);
             nthDay.setMinutes(nthDay.getMinutes() - date.getTimezoneOffset());
+            nthDay = nthDay.toISOString().slice(0, -1);
             val++;
             currentWeekDates.push(nthDay);
         }
@@ -49,16 +50,9 @@ var getRowEntires = function (date, NoOfDaysToSkipForFirstWeekOfMonth = 0) {
 }
 
 //will get current week dates
-var renderWeekCalender = function () {
-    // Get and Set the current date
-    currentDay = new Date();
+var renderWeekCalender = function (currentDate) {
 
-    const currentOffset = currentDay.getTimezoneOffset();
-    if (currentOffset !== -330) {
-      // If the current offset is not 330, adjust the time by adding the offset difference
-      const adjustedTime = currentDay.getTime() + (currentOffset * 60 * 1000) - (330 * 60 * 1000);
-      currentDay.setTime(adjustedTime);
-    }
+    currentDay = currentDate;
 
     //if current date and last sunday are not of same month.[need to display first week of this month start from date 1st]
     if (currentDay.getMonth() != getDateOfLastSunday(currentDay).getMonth()) {
@@ -71,7 +65,10 @@ var renderWeekCalender = function () {
     //if current date and last sunday are of same month.
     else {
         // Get the last Sunday of the current month and pass it to getRowEntires
+        console.log(currentDay);
+        console.log(currentDay.getDay());
         currentDay = getDateOfLastSunday(currentDay);
+        console.log(currentDay);
         return getRowEntires(currentDay);
     }
 }
