@@ -73,10 +73,10 @@ var renderPreviousWeek = function () {
 
     // Check if the current date is the first day of the month
     if (currentDay.getDate() == 1) {
-        //[need to display last week dates for previous month only]
+        //[need to display last week dates for previous month]
         //set the current date to the last day of the previous month
         currentDay.setDate(0);
-        //then get the last Sunday of that month and pass it to getrowEntries
+        //then get the last Sunday of that month and pass it to getRowEntries
         currentDay = getDateOfLastSunday(currentDay);
         return getRowEntires(currentDay);
     }
@@ -84,9 +84,7 @@ var renderPreviousWeek = function () {
     else if ((currentDay.getDate() - 7) >= 1) {
         //[need to display normally current week]
         // simply reduce current date by 7 and pass on
-        console.log('from ---',currentDay);
         currentDay.setDate(currentDay.getDate() - 7);
-        console.log('too ---',currentDay,'\n');
     }
     // if 7 days back from current date is in previous month (current date is before 7th date)
     else if ((currentDay.getDate() - 7) < 1) {
@@ -106,13 +104,14 @@ var renderNextWeek = function () {
         //set the current date to the last Sunday of the current month
         currentDay = getDateOfLastSunday(currentDay);
     }
-    // if 7day after current date is in same month
+    // if 7day after current date is in next month
     else if (getDaysInMonth(currentDay) - currentDay.getDate() < 7) {
         //set the current date to the first day of the next month
         currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, 1);
         //pass it to getRowEntires along with the day of the week it falls on
         return getRowEntires(currentDay, currentDay.getDay());
     }
+    // will execute if 7day after current date is still in same month
     // Add 7 days to the current date and pass it to getRowEntires along with the day of the week it falls on
     currentDay.setDate(currentDay.getDate() + 7);
     return getRowEntires(currentDay, currentDay.getDay());

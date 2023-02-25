@@ -49,6 +49,5 @@ exports.renderPreviousWeek = async function (req, res) {
 exports.renderNextWeek = async function (req, res) {
     let [currentWeekDates, currentMonth, currentYear] = renderNextWeek();
     await loadAllHabits();
-    console.log(currentWeekDates);
     return renderCalender(req, res, currentWeekDates, currentMonth, currentYear);
 };
