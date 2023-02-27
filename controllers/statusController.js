@@ -3,7 +3,7 @@ const Habit = require('../models/habit');
 const Status = require('../models/status');
 
 var currentDate = new Date();
-let allHabitsObj = []
+let allHabitsObj = [];
 
 //for loading all habits from db
 async function loadAllHabits() {
@@ -45,9 +45,6 @@ exports.renderCurrentWeek = async function (req, res) {
     
     await loadAllHabits();
     let [currentWeekDates, currentMonth, currentYear] = renderWeekCalender(currentDate);
-
-    // console.log(currentDate);
-    // console.log(currentWeekDates);
     currentDate = currentDate.toISOString().slice(0, -1);
     return renderCalender(req, res, currentWeekDates, currentMonth, currentYear);
 };

@@ -1,3 +1,4 @@
+// use to send client current date to avoid timezone conflicts
 function redirectToCurrentWeekRecords() {
     const now = new Date();
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

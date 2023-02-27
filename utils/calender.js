@@ -65,10 +65,7 @@ var renderWeekCalender = function (currentDate) {
     //if current date and last sunday are of same month.
     else {
         // Get the last Sunday of the current month and pass it to getRowEntires
-        console.log(currentDay);
-        console.log(currentDay.getDay());
         currentDay = getDateOfLastSunday(currentDay);
-        console.log(currentDay);
         return getRowEntires(currentDay);
     }
 }
@@ -106,7 +103,7 @@ var renderNextWeek = function () {
 
     // Check if the current date is the first day of the month
     if (currentDay.getDate() == 1) {
-        //set the current date to the last Sunday of the current month
+        //first set the current date to the last Sunday of the current month
         currentDay = getDateOfLastSunday(currentDay);
     }
     // if 7day after current date is in next month
