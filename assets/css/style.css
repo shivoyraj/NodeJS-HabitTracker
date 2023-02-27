@@ -1,3 +1,5 @@
+/* Styling for habit.ejs */
+
 td {
   height: 100px;
   width: 100px;
@@ -13,6 +15,7 @@ td {
 
 #currentView{
   position: absolute;
+  top: 25%;
   left: 70%;
 }
 
@@ -65,18 +68,7 @@ td {
   display: none;
 }
 
-
-
-
-
-
-/* Style for the Date */
-/* #date-display {
-  font-weight: bold;
-} */
-
-/* Style for the Buttons */
-/* button {
+button {
   background-color: #008CBA;
   color: white;
   border: none;
@@ -87,4 +79,28 @@ td {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
-} */
+}
+
+@media (width<=1200px) {
+  #currentView{
+    position: absolute;
+    top: 25%;
+    left: 65%;
+  }
+}
+
+@media (width<=770px) {
+  #currentView{
+    position: absolute;
+    top: 25%;
+    left: 60%;
+  }
+}
+
+@media (width<=530px) {
+  #currentView{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+  }
+}

@@ -1,53 +1,58 @@
 const Habit = require('../models/habit');
-var allHabitsObj = [];
+const Status = require('../models/status');
 
-async function loadAllHabit() {
-    try {
-        allHabitsObj = await Habit.find({});
-    }
-    catch (err) {
-        console.log('Error while loading all habits : '+err);
-    }
-}
-
+// loading all habits and Rending Homepage 
 exports.homePage = async function (req, res) {
-    await loadAllHabit();
-    return res.render("index", { allHabitsObj });
+    let allHabitsObj = [];
+    try {
+        allHabitsObj = await Habit.find({}).populate('record');
+        return res.render("index", { allHabitsObj });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ 'error': 'something went wrong at server side ' });
+    }
 }
 
+//Update the status of existing habit based on input url parameters habitId and statusId
 exports.updateHabitStatus = async function (req, res) {
-
     try {
-        const habit = await Habit.findById(req.params.habitId);
-        const record = habit.record.id(req.params.statusId);
+        const { habitId, statusId } = req.params;
+        const record = await Status.findOne({ habit: habitId, _id: statusId });
         if (!record) {
-            return res.status(404).json({ error: "Record not found" });
+            return res.status(404).json({ error: "Status/Habit not found" });
         }
         record.status = record.status === "Not done" ? "None" : record.status === "None" ? "Done" : "Not done";
-        await habit.save();
+        await record.save();
         res.json({ 'status': record.status });
     } catch (err) {
         console.error(err);
         res.status(500).json({ 'error': 'something went wrong at server side ' });
     }
-
 }
 
-exports.createHabit = (req, res) => {
-    const newHabit = new Habit({ title: req.body.habitName });
-    newHabit.save((err, habit) => {
-        if (err)
-            console.log('error while adding new habit : ' + err);
-        else
-            console.log('habit added in db successfully : ' + habit);
+// For adding new records in Habit db
+exports.createHabit = async function (req, res) {
+    try {
+        const newHabit = new Habit({ title: req.body.habitName });
+        const habit = await newHabit.save();
+        console.log('habit added in db successfully : ' + habit);
         return res.redirect("/");
-    });
+    } catch (err) {
+        console.log('error while adding new habit : ' + err);
+        return res.redirect("/");
+    }
 };
 
-exports.deleteHabit = (req, res) => {
-    const id = req.params.habitId;
-    Habit.findByIdAndDelete(id, () => {
+// for deleting existing habit from db
+exports.deleteHabit = async function (req, res) {
+    try {
+        const id = req.params.habitId;
+        await Habit.findByIdAndDelete(id);
+        await Status.deleteMany({ habit: id });
         return res.redirect("/");
-    });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ 'error': 'something went wrong at server side ' });
+    }
 };
 

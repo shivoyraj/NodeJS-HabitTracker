@@ -3,6 +3,7 @@ const toggleLabel = document.getElementById('currentView');
 const weekView = document.getElementById('weekView');
 const dayView = document.getElementById('dayView');
 
+// recieve action when clicked on toggle between day view and week view
 toggleSwitch.addEventListener('change', (event) => {
     if (event.target.checked) {
         weekView.style.display = 'none';
@@ -15,6 +16,7 @@ toggleSwitch.addEventListener('change', (event) => {
     }
 });
 
+// send request to make change the status of particular habitID and statusID
 async function changeStatus(habitId, statusId) {
     try {
         const updatedHabit = await (await fetch(`/habits/updateStatus/${habitId}/${statusId}`)).json();
@@ -26,9 +28,11 @@ async function changeStatus(habitId, statusId) {
         else
             updateStatusIcon = '⬜';
         document.getElementById(`${habitId},${statusId}`).innerHTML = updateStatusIcon;
-        document.getElementById(`today : ${habitId},${statusId}`).innerHTML = updateStatusIcon;
+        const element = document.getElementById(`today:${habitId},${statusId}`);
+        if (element) {
+          element.innerHTML = updateStatusIcon;
+        }        
     } catch (error) {
-        console.error(error);
-        alert("An error occurred while updating the status."+err);
+        console.error("An error occurred while updating the status." + error);
     }
 }
